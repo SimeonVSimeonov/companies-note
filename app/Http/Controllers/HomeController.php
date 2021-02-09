@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
+use App\Repositories\CompanyRepository;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param CompanyRepository $companyRepository
      */
-    public function __construct()
+    public function __construct(CompanyRepository $companyRepository)
     {
         $this->middleware('auth');
+        $this->companyRepository = $companyRepository;
     }
 
     /**
@@ -25,7 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $companies = Company::with('group')->get();
+        $companies = $this->companyRepository->getAllCompanies();
         return view('home', ['companies' => $companies]);
     }
 }
