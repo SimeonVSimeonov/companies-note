@@ -105,8 +105,12 @@
     <script  type="application/javascript">
         window.onload = function() {
             if (window.jQuery) {
+                let l = $('input[name="group_id"]:checked').closest('label').text();
+                $('#selectedGroup').append(`<strong>${l}</strong>`)
+
                 $('#modal').on('hidden.bs.modal', function (e) {
-                    var l = $('input[name="group_id"]:checked').closest('label').text();
+                    $('#selectedGroup').empty();
+                    let l = $('input[name="group_id"]:checked').closest('label').text();
                     $('#selectedGroup').append(`<strong>${l}</strong>`)
                 })
             }
