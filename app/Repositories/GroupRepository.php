@@ -18,4 +18,12 @@ class GroupRepository implements GroupRepositoryInterface
     {
         return Group::create($request->validated());
     }
+
+    /**
+     * @return mixed|void
+     */
+    public function getAllGroups()
+    {
+        return Group::all();
+    }
 }

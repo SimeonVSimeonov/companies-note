@@ -27,11 +27,11 @@
 
                         <div class="col-md-6">
                             <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
-                                   name="group" value="{{null}}" required autocomplete="name" autofocus>
+                                   name="group_id" value="{{null}}" required autocomplete="name" autofocus>
                             <label for="none">None</label><br>
                             @foreach($groups as$group)
                             <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
-                                   name="group" value="{{$group->id}}" required autocomplete="name" autofocus>
+                                   name="group_id" value="{{$group->id}}" required autocomplete="name" autofocus>
                                 <label for="{{$group->name}}">{{$group->name}}</label><br>
                             @endforeach
                             @error('name')

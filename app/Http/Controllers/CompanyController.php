@@ -2,22 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
-use App\Models\Group;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\CompanyRepository;
+use App\Repositories\GroupRepository;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 
 class CompanyController extends Controller
 {
-    public function __construct()
+    /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+    /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * CompanyController constructor.
+     * @param GroupRepository $groupRepository
+     * @param CompanyRepository $companyRepository
+     */
+    public function __construct(GroupRepository $groupRepository, CompanyRepository $companyRepository)
     {
         $this->middleware('auth');
+        $this->groupRepository = $groupRepository;
+        $this->companyRepository = $companyRepository;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,36 +51,31 @@ class CompanyController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View|Response
      */
     public function create()
     {
-        $groups = Group::all();
+        $groups = $this->groupRepository->getAllGroups();
         return view('company.create', ['groups' => $groups]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreCompanyRequest $request
+     * @return Application|RedirectResponse|Response|Redirector
      */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        Company::create([
-            'name' => $request->name,
-            'user_id' => Auth::id(),
-            'group_id' => $request->group
-        ]);
-
+        $this->companyRepository->createCompany($request);
         return redirect('home');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
+     * @param Company $company
+     * @return Response
      */
     public function show(Company $company)
     {
@@ -66,37 +85,34 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
+     * @param Company $company
+     * @return Application|Factory|View|Response
      */
     public function edit(Company $company)
     {
-        $groups = Group::all();
+        $groups = $this->groupRepository->getAllGroups();
         return view('company.edit', ['company' => $company,'groups' => $groups]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
+     * @param UpdateCompanyRequest $request
+     * @param Company $company
+     * @return Application|RedirectResponse|Response|Redirector
      */
-    public function update(Request $request, Company $company)
+    public function update(UpdateCompanyRequest $request, Company $company)
     {
-        $company->update([
-            'name' => $request->name,
-            'group_id' => $request->group
-        ]);
-
+        $this->companyRepository->updateCompany($request, $company);
         return redirect('home');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Company  $company
-     * @return \Illuminate\Http\Response
+     * @param Company $company
+     * @return Application|RedirectResponse|Response|Redirector
+     * @throws Exception
      */
     public function destroy(Company $company)
     {

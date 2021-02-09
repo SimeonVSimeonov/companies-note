@@ -13,4 +13,9 @@ interface GroupRepositoryInterface
      * @return mixed
      */
     public function createGroup(StoreGroupRequest $request);
+
+    /**
+     * @return mixed
+     */
+    public function getAllGroups();
 }

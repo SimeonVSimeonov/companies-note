@@ -26,18 +26,24 @@
                         <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Company Group') }}</label>
 
                         <div class="col-md-6">
-                            <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
-                                   name="group" value="{{null}}" required autocomplete="name" autofocus>
-                            <label for="none">None</label><br>
+                            @if($company->group_id === null)
+                                <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
+                                    name="group_id" value="{{null}}" required autocomplete="name" autofocus checked>
+                                <label for="none">None</label><br>
+                            @else
+                                <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
+                                       name="group_id" value="{{null}}" required autocomplete="name" autofocus>
+                                <label for="none">None</label><br>
+                            @endif
                             @foreach($groups as$group)
                                 @if($company->group_id === $group->id)
                                 <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
-                                       name="group" value="{{$group->id}}" required autocomplete="name" autofocus
+                                       name="group_id" value="{{$group->id}}" required autocomplete="name" autofocus
                                 checked="">
                                 <label for="{{$group->name}}">{{$group->name}}</label><br>
                                 @else
                                     <input id="group" type="radio" class="form-control @error('name') is-invalid @enderror"
-                                           name="group" value="{{$group->id}}" required autocomplete="name" autofocus>
+                                           name="group_id" value="{{$group->id}}" required autocomplete="name" autofocus>
                                     <label for="{{$group->name}}">{{$group->name}}</label><br>
                                 @endif
                             @endforeach
