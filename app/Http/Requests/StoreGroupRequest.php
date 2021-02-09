@@ -24,7 +24,7 @@ class StoreGroupRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:64|unique:groups,name'
+            'name' => 'required|regex:/^[a-zA-Z ]+$/|max:64|unique:groups,name'
         ];
     }
 }

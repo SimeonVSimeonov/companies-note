@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
 use App\Models\Group;
+use App\Repositories\GroupRepository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -14,9 +15,19 @@ use Illuminate\Routing\Redirector;
 
 class GroupController extends Controller
 {
-    public function __construct()
+    /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+
+    /**
+     * GroupController constructor.
+     * @param GroupRepository $groupRepository
+     */
+    public function __construct(GroupRepository $groupRepository)
     {
         $this->middleware('auth');
+        $this->groupRepository = $groupRepository;
     }
 
     /**
@@ -47,13 +58,7 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request)
     {
-        $request->validated();
-        Group::create(
-            [
-                'name' => $request->name,
-            ]
-        );
-
+        $this->groupRepository->createGroup($request);
         return redirect('home');
     }
 
